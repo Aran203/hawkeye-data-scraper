@@ -1,3 +1,3 @@
 ## Contents 
 
-The Hawk-Eye interface utilizes a primary key for each match to ensure unique identification. Although it might have been simpler to base these keys on match details, no such pattern is evident to me. This directory includes CSV files that contain the primary keys for all completed matches in the IPL seasons (indicated by name), which I have manually entered.
+The Hawk-Eye interface utilizes a primary key for each match to ensure unique identification. This key seems to be the UNIX time of the recording of the first ball. This directory includes CSV files that contain these primary keys for all completed matches in the IPL seasons (indicated by name), which I have manually entered and their corresponding ESPNcricinfo match IDs. These match IDs are required because the Hawk-Eye interface is not collecting any data about extras (wides, noballs, leg byes, byes).
