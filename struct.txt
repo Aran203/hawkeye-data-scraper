@@ -1,0 +1,69 @@
+    match 
+        batting team
+            batsman
+                id
+                isRightHanded
+                name
+            batsmanPartner
+                id 
+                isRightHanded
+                name
+            home
+            id (bat_team)
+            name
+        bowling team
+            bowler
+                id 
+                isRightHanded
+                name
+                spell
+            bowlerPartner
+                id
+                isRightHanded
+                name
+            home
+            name
+        delivery
+            additionalEventInformation
+                dropped
+            deliveryNumber
+                ball
+                day
+                innings
+                over
+            deliveryType
+            isPavillionEnd
+            round (round the wicket)
+            scoringInformation
+                score
+                wicket
+                    isWicket
+            shotInformation
+                shotAttacked
+                shotPlayed
+            trajectory
+                batStatPosition         // Useless
+                bounceAboveStumps       // Useless
+                bounceAngle
+                bouncePosition: {x, y, z}
+                cof
+                cor
+                creasePosition
+                deviation
+                dropAngle
+                hitStumps               // Useless
+                impactPosition: {x, y, z}
+                initialAngle
+                landingPosition: {x, y, z}
+                length                  // Useless
+                offBatAngle             // Useless
+                offBatSpeed             // Useless
+                pbr
+                reactionTime(to crease)
+                reactionTime(to interception)
+                realDistance            // 6 distance
+                releasePosition: {x, y, z}
+                releaseSpeed
+                spinRate
+                stumpPosition: {x, y, z}
+                swing
