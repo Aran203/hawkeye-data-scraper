@@ -4,6 +4,9 @@ def parseTrajectoryData(dat: str):
     ''' Dat is the value of a key value pair (key is trajectoryData)
         Function converts it to a dictionary for easy access of attributes '''
     
+    if not dat:
+        return {}
+
     arr = dat.split("\n\n")
     arr = [i.strip().split("\n") for i in arr]
     arr = [[i[0][1:-1], i[1]] for i in arr]
@@ -48,7 +51,12 @@ def extractTrajectoryData(deliveryData, trajectoryDict):
     stumpPos = [allData['stumpPosition']['x'], allData['stumpPosition']['y'], allData['stumpPosition']['z']]
     impactPos = [allData['impactPosition']['x'], allData['impactPosition']['y'], allData['impactPosition']['z']]
     dropAngle = [allData['dropAngle']]
-    deviationData = [allData['swing'], allData['deviation'], float(trajectoryDict['Swing Distance (m)']), float(trajectoryDict['Distance Of Six (m)'])]
+    deviationData = [allData['swing'], allData['deviation']]
+
+    if trajectoryDict:
+        deviationData += [float(trajectoryDict['Swing Distance (m)']), float(trajectoryDict['Distance Of Six (m)'])]
+    else:
+        deviationData += [-1.0, -1.0]
 
     trajectoryData += releaseData + bounceData + impactPos + creasePos + dropAngle + stumpPos + deviationData
 
@@ -66,8 +74,12 @@ def processData(data, matchID, inning):
 
     ball_id = deliveryData['deliveryNumber']['over'] - 1 + deliveryData['deliveryNumber']['ball'] / 100
     ground = matchData["name"].split("_")[4]
-    date = ("-").join(trajectoryDict['Delivery Time and Date'].split()[0].split("/"))[1:]
-    
+
+    if trajectoryDict:
+        date = ("-").join(trajectoryDict['Delivery Time and Date'].split()[0].split("/"))[1:]
+    else:
+        date = -1.0
+
     processedData += batBowlData + [ball_id, deliveryData['scoringInformation']['score']] + trajectoryData + [ground, date]
 
     return processedData
