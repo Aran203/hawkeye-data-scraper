@@ -8,7 +8,7 @@ def fetch_bbb_data(inning, over, ball, hawkID, matchID):
     url = f"{BASE_URL}?path=Delivery_{inning}_{over}_{ball}_{hawkID}.json"
 
     try:
-        response = requests.get(url)
+        response = requests.get(url, timeout = 100)
         data = response.json()
     except requests.RequestException as e:
         print(f"Request failed: {e}")

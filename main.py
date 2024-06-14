@@ -30,10 +30,38 @@ def main():
     fileDat_path = 'matches/ipl-2024.csv'
     hawkeye_ids, match_ids = read_match_ids(fileDat_path)
 
-    with open(FILENAME, 'w') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames = FIELDS) 
-        writer.writeheader()
+    with open(FILENAME, 'a', newline = "") as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(FIELDS)
 
         for i in range(len(match_ids)):
             hawkID = hawkeye_ids[i]
             matchID = match_ids[i]
+
+            for inning in range(1, 3):
+                for over in range(1, 21):
+                    ball = 1
+                    dataExists = True
+
+                    while True:
+                        data = fetch_bbb_data(inning, over, ball, hawkID, matchID)
+                        # No data fetched
+                        if not data:
+                            if ball < 6:
+                                dataExists = False
+                            break
+
+                        processedData = processData(data, matchID, inning)
+                        writer.writerow(processedData)
+
+                        ball += 1
+                    
+                    if not dataExists:
+                        break
+
+            
+            print(f'{matchID} done')
+            
+
+if __name__ == "__main__":
+    main()
