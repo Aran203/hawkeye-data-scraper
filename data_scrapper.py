@@ -16,8 +16,9 @@ def fetch_bbb_data(inning, over, ball, hawkID, matchID):
 
     if not data:
         return []
+    
+    return data
 
-    dataArr = [matchID, inning]        
-
+    
 
 
