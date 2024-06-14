@@ -1,9 +1,12 @@
 import csv
+from data_scrapper import *
+from process_data import *
 
 FIELDS = ['p_match', 'inns', 'bat', 'p_bat', 'bat_hand', 'team_bat', 'bowl', 'p_bowl', 'bowl_type', 'team_bowl', 'ball_id', 'score', 
-          'noball', 'wides', 'byes', 'leg_byes', 'six_dist', 'release_speed', 'release_x', 'release_y', 'release_z', 'bounce_angle', 
-          'bounce_x', 'bounce_y', 'crease_x', 'crease_y', 'crease_z', 'drop_angle', 'impact_x', 'impact_y', 'impact_z', 'swing', 
-          'deviation', 'swing_dist', 'ground', 'date']
+        #   'out' , 'noball', 'wides', 'byes', 'leg_byes', 
+          'release_speed', 'initial_angle', 'release_x', 'release_y', 'release_z', 'bounce_angle', 'bounce_x', 'bounce_y', 
+          'impact_x', 'impact_y', 'impact_z', 'crease_x', 'crease_y', 'crease_z', 'drop_angle', 'stump_x', 'stump_y', 'stump_z',
+          'swing', 'deviation', 'swing_dist', 'six_dist', 'ground', 'date']
 
 FILENAME = "data/ipl-2024.csv"
 
@@ -24,8 +27,8 @@ def read_match_ids(path):
 
 
 def main():
-    
-    hawkeye_ids, match_ids = read_match_ids('matches/ipl-2024.csv')
+    fileDat_path = 'matches/ipl-2024.csv'
+    hawkeye_ids, match_ids = read_match_ids(fileDat_path)
 
     with open(FILENAME, 'w') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames = FIELDS) 
