@@ -21,7 +21,7 @@ def extractBatBowlData(matchData):
         batData = matchData['battingTeam']['batsman']
         bowlData = matchData['bowlingTeam']['bowler']
     except:
-        return ['NA'] * 8
+        return [''] * 8
 
     if (batData['isRightHanded']):
         batHand = "RHB"
@@ -63,7 +63,7 @@ def extractTrajectoryData(deliveryData, trajectoryDict):
     return trajectoryData
 
 
-def processData(data, matchID, inning):
+def processData(df, data, matchID, inning):
     processedData = [matchID, inning]
     matchData = data['match']
     deliveryData = data['match']['delivery']
@@ -80,6 +80,10 @@ def processData(data, matchID, inning):
     else:
         date = -1.0
 
-    processedData += batBowlData + [ball_id, deliveryData['scoringInformation']['score']] + trajectoryData + [ground, date]
+    row = df.loc[(df['p_match'] == int(matchID)) & (df['ball_id'] == ball_id) & (df['inns'] == inning)]
+    attrs = row.loc[:, ['out', 'dismissal', 'noball', 'wide', 'byes', 'legbyes']]
+    extras = attrs.values.flatten().tolist()
+
+    processedData += batBowlData + [ball_id, deliveryData['scoringInformation']['score']] + extras + trajectoryData + [ground, date]
 
     return processedData

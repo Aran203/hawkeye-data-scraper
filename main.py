@@ -1,9 +1,11 @@
 import csv
 from data_scrapper import *
 from process_data import *
+import numpy as np
+import pandas as pd
 
 FIELDS = ['p_match', 'inns', 'bat', 'p_bat', 'bat_hand', 'team_bat', 'bowl', 'p_bowl', 'bowl_type', 'team_bowl', 'ball_id', 'score', 
-        #   'out' , 'noball', 'wides', 'byes', 'leg_byes', 
+          'out' , 'dismissal', 'noball', 'wides', 'byes', 'leg_byes', 
           'release_speed', 'initial_angle', 'release_x', 'release_y', 'release_z', 'bounce_angle', 'bounce_x', 'bounce_y', 
           'impact_x', 'impact_y', 'impact_z', 'crease_x', 'crease_y', 'crease_z', 'drop_angle', 'stump_x', 'stump_y', 'stump_z',
           'swing', 'deviation', 'swing_dist', 'six_dist', 'ground', 'date']
@@ -27,6 +29,7 @@ def read_match_ids(path):
 
 
 def main():
+    df = pd.read_csv("t20bbb.csv", dtype = {'line': str, 'length': str, 'shot': str})
     fileDat_path = 'matches/ipl-2024.csv'
     hawkeye_ids, match_ids = read_match_ids(fileDat_path)
 
@@ -51,17 +54,16 @@ def main():
                                 dataExists = False
                             break
 
-                        processedData = processData(data, matchID, inning)
+                        processedData = processData(df, data, matchID, inning)
                         writer.writerow(processedData)
 
                         ball += 1
                     
                     if not dataExists:
                         break
-
             
             print(f'{matchID} done')
-            
+
 
 if __name__ == "__main__":
     main()
