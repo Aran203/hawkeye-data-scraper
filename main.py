@@ -4,7 +4,7 @@ from process_data import *
 import numpy as np
 import pandas as pd
 
-FIELDS = ['p_match', 'inns', 'bat', 'p_bat', 'bat_hand', 'team_bat', 'bowl', 'p_bowl', 'bowl_type', 'team_bowl', 'ball_id', 'score', 
+FIELDS = ['p_match', 'inns', 'bat', 'p_bat', 'bat_hand', 'team_bat', 'bowl', 'p_bowl', 'bowl_style', 'bowl_type', 'team_bowl', 'ball_id', 'score', 
           'out' , 'dismissal', 'noball', 'wides', 'byes', 'leg_byes', 
           'release_speed', 'initial_angle', 'release_x', 'release_y', 'release_z', 'bounce_angle', 'bounce_x', 'bounce_y', 
           'impact_x', 'impact_y', 'impact_z', 'crease_x', 'crease_y', 'crease_z', 'drop_angle', 'stump_x', 'stump_y', 'stump_z',

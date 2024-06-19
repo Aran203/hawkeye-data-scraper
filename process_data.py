@@ -27,14 +27,15 @@ def extractBatBowlData(matchData):
         batHand = "RHB"
     else:
         batHand = "LHB"
-
-    if (bowlData['isRightHanded']):
-        bowlHand = "RHB"
+    
+    if (matchData['delivery']['deliveryType'] == "Seam"):
+        bowlType = "pace"
     else:
-        bowlHand = "LHB"
+        bowlType = "spin"
+
 
     batArr = [batData['name'].title(), batData['id'].title(), batHand, matchData['battingTeam']['name']]
-    bowlArr = [bowlData['name'].title(), bowlData['id'].title(), bowlHand, matchData['bowlingTeam']['name']]
+    bowlArr = [bowlData['name'].title(), bowlData['id'].title(), bowlType, matchData['bowlingTeam']['name']]
 
     BatBowlData += batArr + bowlArr
 
@@ -83,6 +84,9 @@ def processData(df, data, matchID, inning):
     row = df.loc[(df['p_match'] == int(matchID)) & (df['ball_id'] == ball_id) & (df['inns'] == inning)]
     attrs = row.loc[:, ['out', 'dismissal', 'noball', 'wide', 'byes', 'legbyes']]
     extras = attrs.values.flatten().tolist()
+
+    bowlStyle = df.loc[(df['p_match'] == int(matchID)) & (df['ball_id'] == ball_id) & (df['inns'] == inning)]['bowl_style'].values
+    batBowlData.insert(6, bowlStyle[0])
 
     processedData += batBowlData + [ball_id, deliveryData['scoringInformation']['score']] + extras + trajectoryData + [ground, date]
 

@@ -15,6 +15,6 @@ Would like to thank [Himanish Ganjoo](https://twitter.com/hganjoo_153) for his s
 
 ## To do 🔨
 
-1. Add data for IPL 2022, 23 and WPL (if available?)
-2. Add information about the type of bowler (RF, OB, LB, etc.)
-3. Fix wrong player names? (For example, Ganesh instead of Ruturaj)
+1. Add data for IPL 2022, 23
+2. Fix wrong player names? (For example, correct Ganesh to Ruturaj)
+3. Add info about which batter is run out?
