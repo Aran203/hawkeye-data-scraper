@@ -14,7 +14,7 @@ def parseTrajectoryData(dat: str):
     del myDict["Software Version"]
     return myDict
 
-def extractBatBowlData(matchData):
+def extractBatBowlData(df, matchID, inning, ballID, matchData):
     BatBowlData = []
     
     try:
@@ -33,15 +33,21 @@ def extractBatBowlData(matchData):
     else:
         bowlType = "spin"
 
+    
+    bowlStyle = df.loc[(df['p_match'] == int(matchID)) & (df['ball_id'] == ballID) & (df['inns'] == inning)]['bowl_style'].values[0]
+    batID = df.loc[(df['p_match'] == int(matchID)) & (df['ball_id'] == ballID) & (df['inns'] == inning)]['p_bat'].values[0]
+    bowlID = df.loc[(df['p_match'] == int(matchID)) & (df['ball_id'] == ballID) & (df['inns'] == inning)]['p_bowl'].values[0]
 
-    batArr = [batData['name'].title(), batData['id'].title(), batHand, matchData['battingTeam']['name']]
-    bowlArr = [bowlData['name'].title(), bowlData['id'].title(), bowlType, matchData['bowlingTeam']['name']]
+
+    batArr = [batData['name'].title(), batID, batHand, matchData['battingTeam']['name']]
+    bowlArr = [bowlData['name'].title(), bowlID, bowlStyle, bowlType, matchData['bowlingTeam']['name']]
 
     BatBowlData += batArr + bowlArr
 
     return BatBowlData
 
 def extractTrajectoryData(deliveryData, trajectoryDict):
+    ''' Extracts features related to the trajectory of the delivery - coords of releasing, bouncing, crease & stump interception etc'''
     trajectoryData = []
 
     allData = deliveryData['trajectory']
@@ -68,11 +74,9 @@ def processData(df, data, matchID, inning):
     processedData = [matchID, inning]
     matchData = data['match']
     deliveryData = data['match']['delivery']
-
-    batBowlData = extractBatBowlData(matchData)
     trajectoryDict = parseTrajectoryData(matchData['delivery']['trajectory']['trajectoryData'])
-    trajectoryData = extractTrajectoryData(deliveryData, trajectoryDict)
 
+    # Extracting ball ID, ground and date data
     ball_id = deliveryData['deliveryNumber']['over'] - 1 + deliveryData['deliveryNumber']['ball'] / 100
     ground = matchData["name"].split("_")[4]
 
@@ -81,12 +85,13 @@ def processData(df, data, matchID, inning):
     else:
         date = -1.0
 
+    batBowlData = extractBatBowlData(df, matchID, inning, ball_id, matchData)
+    trajectoryData = extractTrajectoryData(deliveryData, trajectoryDict)
+
+    # Extracting extras info
     row = df.loc[(df['p_match'] == int(matchID)) & (df['ball_id'] == ball_id) & (df['inns'] == inning)]
     attrs = row.loc[:, ['out', 'dismissal', 'noball', 'wide', 'byes', 'legbyes']]
     extras = attrs.values.flatten().tolist()
-
-    bowlStyle = df.loc[(df['p_match'] == int(matchID)) & (df['ball_id'] == ball_id) & (df['inns'] == inning)]['bowl_style'].values
-    batBowlData.insert(6, bowlStyle[0])
 
     processedData += batBowlData + [ball_id, deliveryData['scoringInformation']['score']] + extras + trajectoryData + [ground, date]
 
