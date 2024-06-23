@@ -32,6 +32,19 @@ def extractBatBowlData(df, matchID, inning, ballID, matchData):
         bowlType = "pace"
     else:
         bowlType = "spin"
+    
+    batTeam = matchData['battingTeam']['name'].title()
+    bowlTeam = matchData['bowlingTeam']['name'].title()
+
+    if "Bangalore" in batTeam:
+        batTeamArr = batTeam.split("-")
+        batTeamArr.append(batTeamArr.pop(0))
+        batTeam = "-".join(batTeamArr)
+    
+    if "Bangalore" in bowlTeam:
+        bowlTeamArr = bowlTeam.split("-")
+        bowlTeamArr.append(bowlTeamArr.pop(0))
+        bowlTeam = "-".join(bowlTeamArr)
 
     
     bowlStyle = df.loc[(df['p_match'] == int(matchID)) & (df['ball_id'] == ballID) & (df['inns'] == inning)]['bowl_style'].values[0]
@@ -39,8 +52,8 @@ def extractBatBowlData(df, matchID, inning, ballID, matchData):
     bowlID = df.loc[(df['p_match'] == int(matchID)) & (df['ball_id'] == ballID) & (df['inns'] == inning)]['p_bowl'].values[0]
 
 
-    batArr = [batData['name'].title(), batID, batHand, matchData['battingTeam']['name']]
-    bowlArr = [bowlData['name'].title(), bowlID, bowlStyle, bowlType, matchData['bowlingTeam']['name']]
+    batArr = [batData['name'].title(), batID, batHand, batTeam]
+    bowlArr = [bowlData['name'].title(), bowlID, bowlStyle, bowlType, bowlTeam]
 
     BatBowlData += batArr + bowlArr
 

@@ -37,31 +37,32 @@ def main():
         writer = csv.writer(csvfile)
         writer.writerow(FIELDS)
 
-        for i in range(len(match_ids)):
+        for i in range(6, 8):
             hawkID = hawkeye_ids[i]
             matchID = match_ids[i]
 
             for inning in range(1, 3):
                 for over in range(1, 21):
                     ball = 1
-                    dataExists = True
 
                     while True:
-                        data = fetch_bbb_data(inning, over, ball, hawkID, matchID)
+                        data = fetch_bbb_data(inning, over, ball, hawkID)
+                        
                         # No data fetched
                         if not data:
-                            if ball < 6:
-                                dataExists = False
-                            break
+                            result = fetch_bbb_data_csv(inning, over, ball, matchID, df)
+                            if result[0]:
+                                print(f'{matchID} \t {inning}-{over}-{ball}')
+                                writer.writerow(result[1])
+                            else:
+                                break
 
-                        processedData = processData(df, data, matchID, inning)
-                        writer.writerow(processedData)
+                        else:        
+                            processedData = processData(df, data, matchID, inning)
+                            writer.writerow(processedData)
 
                         ball += 1
                     
-                    if not dataExists:
-                        break
-            
             print(f'{matchID} done')
 
 
