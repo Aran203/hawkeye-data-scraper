@@ -37,7 +37,7 @@ def main():
         writer = csv.writer(csvfile)
         writer.writerow(FIELDS)
 
-        for i in range(6, 8):
+        for i in range(len(match_ids)):
             hawkID = hawkeye_ids[i]
             matchID = match_ids[i]
 
@@ -47,18 +47,23 @@ def main():
 
                     while True:
                         data = fetch_bbb_data(inning, over, ball, hawkID)
-                        
+
+                        ball_id = int(over) - 1 + float(ball) / 100
+                        ball_row = df.loc[(df['p_match'] == int(matchID)) & (df['ball_id'] == ball_id) & (df['inns'] == inning)]
+
+                        validation_data = fetch_ball_row_csv(ball_row)
+
                         # No data fetched
                         if not data:
-                            result = fetch_bbb_data_csv(inning, over, ball, matchID, df)
-                            if result[0]:
+                            if validation_data[0]:
                                 print(f'{matchID} \t {inning}-{over}-{ball}')
-                                writer.writerow(result[1])
+                                writer.writerow(validation_data[1])
                             else:
                                 break
 
                         else:        
-                            processedData = processData(df, data, matchID, inning)
+                            processedData = processData(ball_row, data, matchID, inning)                        
+                            validateData(processedData, validation_data[1])
                             writer.writerow(processedData)
 
                         ball += 1

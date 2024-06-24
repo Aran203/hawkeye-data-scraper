@@ -1,6 +1,7 @@
 import requests
 import json
 import csv
+import numpy as np
 from main import FIELDS
 
 BASE_URL = "https://polls.iplt20.com/widget/welcome/get_data"
@@ -21,26 +22,22 @@ def fetch_bbb_data(inning, over, ball, hawkID):
     
     return data
 
-def fetch_bbb_data_csv(inning, over, ball, matchID, df):
-    ball_id = int(over) - 1 + float(ball) / 100
-    row = df.loc[(df['p_match'] == int(matchID)) & (df['ball_id'] == ball_id) & (df['inns'] == inning)]
+def fetch_ball_row_csv(row):
 
     if not row.empty:
         rst = row.loc[:, ['p_match', 'inns', 'bat', 'p_bat', 'bat_hand', 'team_bat', 'bowl', 'p_bowl', 'bowl_style', 'bowl_kind', 'team_bowl', 'ball_id', 'score', 'out', 'dismissal', 'noball', 'wide', 'byes', 'legbyes', 'ground', 'date']]
 
         rst = rst.values[0].tolist()
         rst[9] = rst[9].split()[0]
-        rst[-2] = "-".join(rst[-2].replace(",", " ").split())
+        rst[-2] = "-".join(rst[-2].replace(",", " ").split()).upper()
         rst[5] = "-".join(rst[5].split())
         rst[10] = "-".join(rst[10].split())
 
-        rst[19:19] = [''] * TRAJECTORY_FIELDS
+        rst[19:19] = [np.nan] * TRAJECTORY_FIELDS
 
         return (True, rst)
     else:
         return (False, [])
-
-    pass
 
     
 

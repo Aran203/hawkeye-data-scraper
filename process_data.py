@@ -14,7 +14,7 @@ def parseTrajectoryData(dat: str):
     del myDict["Software Version"]
     return myDict
 
-def extractBatBowlData(df, matchID, inning, ballID, matchData):
+def extractBatBowlData(row, matchID, inning, ballID, matchData):
     BatBowlData = []
     
     try:
@@ -47,9 +47,9 @@ def extractBatBowlData(df, matchID, inning, ballID, matchData):
         bowlTeam = "-".join(bowlTeamArr)
 
     
-    bowlStyle = df.loc[(df['p_match'] == int(matchID)) & (df['ball_id'] == ballID) & (df['inns'] == inning)]['bowl_style'].values[0]
-    batID = df.loc[(df['p_match'] == int(matchID)) & (df['ball_id'] == ballID) & (df['inns'] == inning)]['p_bat'].values[0]
-    bowlID = df.loc[(df['p_match'] == int(matchID)) & (df['ball_id'] == ballID) & (df['inns'] == inning)]['p_bowl'].values[0]
+    bowlStyle = row['bowl_style'].values[0]
+    batID = row['p_bat'].values[0]
+    bowlID = row['p_bowl'].values[0]
 
 
     batArr = [batData['name'].title(), batID, batHand, batTeam]
@@ -82,8 +82,16 @@ def extractTrajectoryData(deliveryData, trajectoryDict):
 
     return trajectoryData
 
+def validateData(extracted_data, validation_criteria):
 
-def processData(df, data, matchID, inning):
+    if extracted_data[2] != validation_criteria[2]:
+        extracted_data[2] = validation_criteria[2]
+    
+    if extracted_data[6] != validation_criteria[6]:
+        extracted_data[6] = validation_criteria[6]
+
+    
+def processData(row, data, matchID, inning):
     processedData = [matchID, inning]
     matchData = data['match']
     deliveryData = data['match']['delivery']
@@ -98,11 +106,10 @@ def processData(df, data, matchID, inning):
     else:
         date = -1.0
 
-    batBowlData = extractBatBowlData(df, matchID, inning, ball_id, matchData)
+    batBowlData = extractBatBowlData(row, matchID, inning, ball_id, matchData)
     trajectoryData = extractTrajectoryData(deliveryData, trajectoryDict)
 
     # Extracting extras info
-    row = df.loc[(df['p_match'] == int(matchID)) & (df['ball_id'] == ball_id) & (df['inns'] == inning)]
     attrs = row.loc[:, ['out', 'dismissal', 'noball', 'wide', 'byes', 'legbyes']]
     extras = attrs.values.flatten().tolist()
 
