@@ -30,16 +30,17 @@ def read_match_ids(path):
 
 def main():
     df = pd.read_csv("t20bbb.csv", dtype = {'line': str, 'length': str, 'shot': str})
-    fileDat_path = 'matches/ipl-2024.csv'
+    fileDat_path = 'matches/hawkeye-keydata.csv'
     hawkeye_ids, match_ids = read_match_ids(fileDat_path)
 
     with open(FILENAME, 'a', newline = "") as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(FIELDS)
-
-        for i in range(len(match_ids)):
+    
+        for i in range(5):
             hawkID = hawkeye_ids[i]
             matchID = match_ids[i]
+            count = 0
 
             for inning in range(1, 3):
                 for over in range(1, 21):
@@ -56,19 +57,21 @@ def main():
                         # No data fetched
                         if not data:
                             if validation_data[0]:
-                                print(f'{matchID} \t {inning}-{over}-{ball}')
+                                print(f'Imputation required - {matchID} - {inning}-{over}-{ball}')
                                 writer.writerow(validation_data[1])
                             else:
                                 break
 
                         else:        
                             processedData = processData(ball_row, data, matchID, inning)                        
-                            validateData(processedData, validation_data[1])
+                            if validateData(processedData, validation_data[1]):
+                                print(f'Validation required - {matchID} - {inning}-{over}-{ball}')
                             writer.writerow(processedData)
 
                         ball += 1
+                        count += 1
                     
-            print(f'{matchID} done')
+            print(f'{matchID} \t {count} done')
 
 
 if __name__ == "__main__":

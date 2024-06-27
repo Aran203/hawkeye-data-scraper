@@ -86,9 +86,13 @@ def validateData(extracted_data, validation_criteria):
 
     if extracted_data[2] != validation_criteria[2]:
         extracted_data[2] = validation_criteria[2]
+        return True
     
     if extracted_data[6] != validation_criteria[6]:
         extracted_data[6] = validation_criteria[6]
+        return True
+
+    return False
 
     
 def processData(row, data, matchID, inning):
