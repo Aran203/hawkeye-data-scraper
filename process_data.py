@@ -1,6 +1,6 @@
 
 
-def parseTrajectoryData(dat: str):
+def parse_trajectory_data(dat: str):
     ''' Dat is the value of a key value pair (key is trajectoryData)
         Function converts it to a dictionary for easy access of attributes '''
     
@@ -14,7 +14,7 @@ def parseTrajectoryData(dat: str):
     del myDict["Software Version"]
     return myDict
 
-def extractBatBowlData(row, matchID, inning, ballID, matchData):
+def fill_batbowl_data(row, matchData):
     BatBowlData = []
     
     try:
@@ -59,64 +59,99 @@ def extractBatBowlData(row, matchID, inning, ballID, matchData):
 
     return BatBowlData
 
-def extractTrajectoryData(deliveryData, trajectoryDict):
-    ''' Extracts features related to the trajectory of the delivery - coords of releasing, bouncing, crease & stump interception etc'''
-    trajectoryData = []
+def fill_trajectory_data(ball_data, delivery_data, trajectory_dict):
+    ''' 
+    Extracts features related to the trajectory of the delivery - coords of releasing, bouncing, crease & stump interception etc
+    '''
 
-    allData = deliveryData['trajectory']
+    trajectory_data = delivery_data['trajectory']
 
-    releaseData = [allData['releaseSpeed'], allData['initialAngle']] + [allData['releasePosition'][i] for i in allData['releasePosition']]
-    bounceData = [allData['bounceAngle'], allData['bouncePosition']['x'], allData['bouncePosition']['y']]
-    creasePos = [allData['creasePosition']['x'], allData['creasePosition']['y'], allData['creasePosition']['z']]
-    stumpPos = [allData['stumpPosition']['x'], allData['stumpPosition']['y'], allData['stumpPosition']['z']]
-    impactPos = [allData['impactPosition']['x'], allData['impactPosition']['y'], allData['impactPosition']['z']]
-    dropAngle = [allData['dropAngle']]
-    deviationData = [allData['swing'], allData['deviation']]
+    release_data = trajectory_data['releasePosition']
+    crease_pos = trajectory_data['creasePosition']
+    stump_pos = trajectory_data['stumpPosition']
+    impact_pos = trajectory_data['impactPosition']
+        
 
-    if trajectoryDict:
-        deviationData += [float(trajectoryDict['Swing Distance (m)']), float(trajectoryDict['Distance Of Six (m)'])]
-    else:
-        deviationData += [-1.0, -1.0]
+    ball_data_traj = {'release_speed': trajectory_data['releaseSpeed'], 'initial_angle': trajectory_data['initialAngle'], 
+                      'release_x': release_data['x'], 'release_y': release_data['y'], "release_z" : release_data['z'],
+                      'bounce_angle': trajectory_data['bounceAngle'], 
+                      'bounce_x': trajectory_data['bouncePosition']['x'], 'bounce_y': trajectory_data['bouncePosition']['y'], 
+                      'crease_x': crease_pos['x'], 'crease_y' : crease_pos['y'],
+                      'crease_z' : crease_pos['z'], 'drop_angle' : trajectory_data['dropAngle'], 
+                      'impact_x': impact_pos['x'], 'impact_y' : impact_pos['y'], 'impact_z' : impact_pos['z'], 
+                      'stump_x' : stump_pos['x'], 'stump_y' : stump_pos['y'], 'stump_z' : stump_pos['z'],
+                      'swing' : trajectory_data['swing'], 'deviation' : trajectory_data['deviation'],
+                      'swing_dist' : trajectory_dict.get('Swing Distance (m)', -1.0), 'six_dist' : trajectory_dict.get('Distance Of Six (m)', -1.0),
+                      }
+    
+    if trajectory_dict:
+        pre_bounce_acc = trajectory_dict['Acceleration'].split()
+        post_bounce_acc = trajectory_dict['Post Bounce Acceleration'].split()
+        pre_bounce_vel = trajectory_dict['Pre Bounce Velocity'].split()
+        post_bounce_vel = trajectory_dict['Post Bounce Velocity'].split()
 
-    trajectoryData += releaseData + bounceData + impactPos + creasePos + dropAngle + stumpPos + deviationData
+        motion_data = {
+                        'pre_bounce_ax': float(pre_bounce_acc[0]), 'pre_bounce_ay' : float(pre_bounce_acc[1]), 'pre_bounce_az' : float(pre_bounce_acc[2]),
+                        'post_bounce_ax' : float(post_bounce_acc[0]), 'post_bounce_ay' : float(post_bounce_acc[1]), 'post_bounce_az' : float(post_bounce_acc[2]),
+                        'pre_bounce_vx' : float(pre_bounce_vel[0]), 'pre_bounce_vy' : float(pre_bounce_vel[1]), 'pre_bounce_vz' : float(pre_bounce_vel[2]),
+                        'post_bounce_vx' : float(post_bounce_vel[0]), 'post_bounce_vy' : float(post_bounce_vel[1]), 'post_bounce_vz' : float(post_bounce_vel[1])
+                  
+                    }
+        
+        ball_data.update(motion_data)
+        
+    
 
-    return trajectoryData
+
+    ball_data.update(ball_data_traj)
+
 
 def validateData(extracted_data, validation_criteria):
 
-    if extracted_data[2] != validation_criteria[2]:
+    if extracted_data[2] != validation_criteria[2] or extracted_data[6] != validation_criteria[6]:
         extracted_data[2] = validation_criteria[2]
-        return True
-    
-    if extracted_data[6] != validation_criteria[6]:
         extracted_data[6] = validation_criteria[6]
         return True
-
-    return False
-
     
-def processData(row, data, matchID, inning):
-    processedData = [matchID, inning]
-    matchData = data['match']
-    deliveryData = data['match']['delivery']
-    trajectoryDict = parseTrajectoryData(matchData['delivery']['trajectory']['trajectoryData'])
+    return False
+    
+def processData(ball_data, response):
 
-    # Extracting ball ID, ground and date data
-    ball_id = deliveryData['deliveryNumber']['over'] - 1 + deliveryData['deliveryNumber']['ball'] / 100
-    ground = matchData["name"].split("_")[4]
+    match_data = response['match']
+    delivery_data = response['match']['delivery']
+    trajectory_dict = parse_trajectory_data(match_data['delivery']['trajectory']['trajectoryData'])
 
-    if trajectoryDict:
-        date = ("-").join(trajectoryDict['Delivery Time and Date'].split()[0].split("/"))[1:]
+    # Extracting ground and date data
+    ground = match_data["name"].split("_")[4]
+    ball_data['ground'] = ground
+
+    if trajectory_dict:
+        date = ("-").join(trajectory_dict['Delivery Time and Date'].split()[0].split("/"))[1:]
     else:
         date = -1.0
 
-    batBowlData = extractBatBowlData(row, matchID, inning, ball_id, matchData)
-    trajectoryData = extractTrajectoryData(deliveryData, trajectoryDict)
+    ball_data['date'] = date
 
-    # Extracting extras info
-    attrs = row.loc[:, ['out', 'dismissal', 'noball', 'wide', 'byes', 'legbyes']]
-    extras = attrs.values.flatten().tolist()
 
-    processedData += batBowlData + [ball_id, deliveryData['scoringInformation']['score']] + extras + trajectoryData + [ground, date]
+    batTeam = match_data['battingTeam']['name'].title()
+    bowlTeam = match_data['bowlingTeam']['name'].title()
 
-    return processedData
+    if "Bangalore" in batTeam:
+        batTeamArr = batTeam.split("-")
+        batTeamArr.append(batTeamArr.pop(0))
+        batTeam = "-".join(batTeamArr)
+    
+    if "Bangalore" in bowlTeam:
+        bowlTeamArr = bowlTeam.split("-")
+        bowlTeamArr.append(bowlTeamArr.pop(0))
+        bowlTeam = "-".join(bowlTeamArr)
+
+    ball_data['team_bat'] = batTeam
+    ball_data['team_bowl'] = bowlTeam
+
+
+
+    # fill_batbowl_data(ball_data_check, matchData)
+    fill_trajectory_data(ball_data, delivery_data, trajectory_dict)
+
+    
