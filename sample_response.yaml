@@ -1,0 +1,142 @@
+.
+├── country: "INDIA"
+├── format: "T20"
+├── international: null
+└── match
+    ├── battingTeam
+    │   ├── batsman
+    │   │   ├── id: "12865945972609"
+    │   │   ├── isRightHanded: true
+    │   │   └── name: "Virat Kohli"
+    │   ├── batsmanPartner
+    │   │   ├── id: "13001676148975"
+    │   │   ├── isRightHanded: true
+    │   │   └── name: "FAF DU PLESSIS"
+    │   ├── home: true
+    │   ├── id: "12865944325687"
+    │   └── name: "BANGALORE-ROYAL-CHALLENGERS"
+    ├── bowlingTeam
+    │   ├── bowler
+    │   │   ├── id: "13247237662014"
+    │   │   ├── isRightHanded: true
+    │   │   ├── name: "TUSHAR DESHPANDE"
+    │   │   └── spell: 0
+    │   ├── bowlerPartner
+    │   │   ├── id: null
+    │   │   ├── isRightHanded: null
+    │   │   └── name: null
+    │   ├── home: false
+    │   └── name: "CHENNAI-SUPER-KINGS"
+    ├── delivery
+    │   ├── additionalEventInformation
+    │   │   └── dropped: null
+    │   ├── deliveryNumber
+    │   │   ├── ball: 1
+    │   │   ├── day: 1
+    │   │   ├── innings: 1
+    │   │   └── over: 1
+    │   ├── deliveryType: "Seam"
+    │   ├── fielderPosition
+    │   │   ├── 1st Slip: false
+    │   │   ├── 2nd Slip: false
+    │   │   ├── 3rd Slip: false
+    │   │   ├── 4th Slip: false
+    │   │   ├── 5th Slip: false
+    │   │   ├── Backwards Point: false
+    │   │   ├── Cover: false
+    │   │   ├── Cow Corner: false
+    │   │   ├── Deep Backwards Square Leg: false
+    │   │   ├── Deep Cover: false
+    │   │   ├── Deep Extra Cover: false
+    │   │   ├── Deep Mid Wicket: false
+    │   │   ├── Deep Point: false
+    │   │   ├── Deep Square Leg: false
+    │   │   ├── Extra Cover: false
+    │   │   ├── Fine Leg: false
+    │   │   ├── Fly Slip: false
+    │   │   ├── Gully: false
+    │   │   ├── Leg Gully: false
+    │   │   ├── Leg Slip: false
+    │   │   ├── Long Leg: false
+    │   │   ├── Long-off: false
+    │   │   ├── Long-on: false
+    │   │   ├── Mid Wicket: false
+    │   │   ├── Mid-off: false
+    │   │   ├── Mid-on: false
+    │   │   ├── Point: false
+    │   │   ├── Short Extra Cover: false
+    │   │   ├── Short Fine Leg: false
+    │   │   ├── Short Leg: false
+    │   │   ├── Short Mid-wicket: false
+    │   │   ├── Silly Mid-off: false
+    │   │   ├── Silly Point: false
+    │   │   ├── Square Leg: false
+    │   │   ├── Third Man: false
+    │   │   └── Wicket Keeper: false
+    │   ├── isPavilionEnd: true
+    │   ├── round: false
+    │   ├── scoringInformation
+    │   │   ├── boundary: null
+    │   │   ├── extrasScore: 0
+    │   │   ├── extrasType: "None"
+    │   │   ├── overthrowScore: null
+    │   │   ├── score: 1
+    │   │   └── wicket
+    │   │       ├── isWicket: false
+    │   │       ├── wicketType: null
+    │   │       └── wicketsTaken: null
+    │   ├── shotInformation
+    │   │   ├── batsmanWeight: "Unset"
+    │   │   ├── shotAttacked: "Attacked"
+    │   │   ├── shotPlayed: "Played"
+    │   │   └── shotTypeAdditional: "None"
+    │   ├── timecode: "769375805000000"
+    │   └── trajectory
+    │       ├── batStatPosition
+    │       │   ├── x: 0
+    │       │   └── y: 0
+    │       ├── bounceAboveStumps: null
+    │       ├── bounceAngle: 10.09786715442296
+    │       ├── bouncePosition
+    │       │   ├── x: 9.164456
+    │       │   ├── y: -0.442335
+    │       │   └── z: 0
+    │       ├── cof: 0.1985015130495493
+    │       ├── cor: 0.7082858697735761
+    │       ├── creasePosition
+    │       │   ├── x: -8.841077
+    │       │   ├── y: -0.516961
+    │       │   └── z: 1.149741
+    │       ├── deviation: -1.320039765272049
+    │       ├── dropAngle: -13.04503902654367
+    │       ├── hitStumps: null
+    │       ├── impactPosition
+    │       │   ├── x: -8.146001
+    │       │   ├── y: -0.51024
+    │       │   └── z: 1.078631
+    │       ├── initialAngle: -9.457039459172996
+    │       ├── landingPosition
+    │       │   ├── x: -40
+    │       │   ├── y: -143
+    │       │   └── z: 0
+    │       ├── length: null
+    │       ├── offBatAngle: 1000000
+    │       ├── offBatSpeed: -1
+    │       ├── pbr: 96.39272916108149
+    │       ├── reactionTime(to crease): 0.53594970703125
+    │       ├── reactionTime(to interception): 0.49237060546875
+    │       ├── realDistance: 0
+    │       ├── releasePosition
+    │       │   ├── x: 8.340479311973809
+    │       │   ├── y: -0.6758907814412803
+    │       │   └── z: 1.870153367084205
+    │       ├── releaseSpeed: 82.16846158294328
+    │       ├── spinRate: 0
+    │       ├── stumpPosition
+    │       │   ├── x: -10.06028583755799
+    │       │   ├── y: -0.5288433301653614
+    │       │   └── z: 1.26152144507088
+    │       ├── swing: -1.255232776380642
+    │       └── trajectoryData: "..."
+    └── name: "BANGALORE-ROYAL-CHALLENGERS_CHENNAI-SUPER-KINGS_T20_68_M-CHINNASWAMY-STADIUM-BANGALORE"
+└── tourName: "INDIA_24_MAR_13355650203977_IPL-2024-VIACOM"
